@@ -1,0 +1,55 @@
+body {
+  background-color: rgb(32, 32, 32);
+}
+
+p {
+  color: white;
+}
+
+a {
+  color: cyan;
+}
+
+#name {
+  text-align: center;
+  color: orange;
+}
+
+.mainDisplay {
+  max-width: 200px;
+  display: table;
+  margin: 0 auto;
+}
+
+/* Abstract class.
+Use in tandem with ...Menu classes below.*/
+.menu {
+  max-width: 200px;
+  
+  border-style: hidden;
+  border-radius: 5px;
+
+  padding-top: 0px;
+  padding-bottom: 0px;
+  
+  box-sizing: border-box;
+
+  background: rgb(50, 50, 50);
+  
+  margin: 0
+}
+
+/* Use in tandem with menu class. */
+.leftMenu {
+  float: left;
+}
+
+/* Use in tandem with menu class. */
+.rightMenu {
+  float: right;
+}
+
+.menuItem {
+  text-align: left;
+  margin: 0px;
+}
