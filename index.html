@@ -3,37 +3,68 @@
 <head>
   <title>Main page</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // Hide broken icons. Courtesy of Kevin Jantzer: https://stackoverflow.com/a/22051972
+    document.addEventListener("DOMContentLoaded", function(event) {
+      document.querySelectorAll('.icon').forEach(function(img) {
+        img.onerror = function(){this.style.display='none';};
+      })
+    });
+  </script>
   <!-- <script src="js/main.js"></script> -->
 </head>
 <body>
 
   <div class="sideMenus">
+  
     <div class="menu leftMenu">
-      <div class="subMenu">
-        <p class="menuItem">Left1</p>
-        <p class="menuItem">Left2</p>
-        <p class="menuItem">Left3</p>
-      </div>
+      <h3 class="menuItem">Opleidingen</h3>
+      <p class="menuItemItem">
+        <img src="img/ULlogo3.png" class="icon">
+        <a target="_blank" href="https://theses.liacs.nl/1539">WO Bachelor</a>
+      </p>
+      <p class="menuItemItem">
+        <img src="img/ULlogo3.png" class="icon">
+        <a target="_blank" href="https://theses.liacs.nl/3071">WO Master</a>
+      </p>
+      <p class="menuItemItem">
+        <img src="img/MScertFundBadge.png" class="icon">
+        <a target="_blank" href="https://learn.microsoft.com/api/credentials/share/en-us/BenjaminSteffens/79CE60C677AC62E8?sharingId=66084197774656C1">AZ-900</a>
+      </p>
+      
+      <h3 class="menuItem">Vaardigheden</h3>
+      <p class="menuItemItem"><img src="img/pythonLogo.png" class="icon">Python</p>
+      <p class="menuItemItem"><img src="img/Cicon.png" class="icon">C</p>
+      <p class="menuItemItem"><img src="img/CPPicon.png" class="icon">C++</p>
+      <p class="menuItemItem"><img src="img/armWhiteTXTBlackBG.png" class="icon iconARM">ARM assembly</p>
+      <p class="menuItemItem"><img src="img/sqlIcon.png" class="icon">SQL</p>
+      <p class="menuItemItem"><img src="img/javaIcon.png" class="icon">Java</p>
+      
+      <h3 class="menuItem">Talen</h3>
+      <p class="menuItemItem"><img src="img/flag_nl.png" class="icon">Nederlands</p>
+      <p class="menuItemItem"><img src="img/flag_en.png" class="icon">Engels</p>
+      <p class="menuItemItem"><img src="img/flag_de.png" class="icon">Duits</p>
     </div>
+    
     <div class="menu rightMenu">
-      <div class="subMenu">
-        <p class="menuItem">Right1</p>
-        <p class="menuItem">Right2</p>
-        <p class="menuItem">Right3</p>
-      </div>
+      <h3 class="menuItem">Links</h3>
+      <p class="menuItemItem">GitHub</p>
+      <p class="menuItemItem">LinkedIn</p>
+      
+      <h3 class="menuItem">Hobbies</h3>
+      <p class="menuItemItem">Spellen</p>
+      <p class="menuItemItem">Modelbouw</p>
+      <p class="menuItemItem">Verzamelen</p>
+      
+      <h3 class="menuItem">Projecten</h3>
+      <p class="menuItemItem">Pilaren</p>
+      <p class="menuItemItem">DigitalBinder</p>
+      <p class="menuItemItem">SpaceInvaders</p>
     </div>
   </div>
-
-  <!--
-  <div class="mainDisplay">
-    <p id="name">Top-Centre</p>
-    <a href="page2/index.html">Link to page 2 lalalalala.</a>
-    <p>hhahahahaha</p>
-  </div>
-  -->
   
   <div class="mainDisplay">
-    <p id="name">Title</p>
+    <h1 id="name">Title</h1>
     <p>
       Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
     </p>
