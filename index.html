@@ -1,15 +1,323 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Main page</title>
-<script src="js/main.js"></script>
+  <title>Main page</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/jquery-3.7.1.min.js"></script>
+  <script>
+    // I'd rather use an enum, but I don't see how to avoid using strings here.
+    let currentLang = "LANGNULL";
+    let currentInfo = "INFONULL"
+    let errorIsDisplayed = false;
+  
+    // Display error and set errorIsDisplayed bool to true
+    // to indicate an error is currently being displayed.
+    function handleError(errorMsg) {
+    
+      // Output error message to console.
+      console.log(errorMsg)
+      
+      // Output error message to display screen.
+      try {
+        if (!$("#infoError").length) {
+          throw new Error("Couldn't find error message element with id: infoError");
+        }
+        $("#infoError").text(errorMsg).show();
+        errorIsDisplayed = true;
+      } catch(error) {
+        // If we can't send message to display screen, log that too.
+        console.log(error)
+        
+        // Instead alert it to visitor.
+        alert(errorMsg);
+      }
+    }
+  
+    // Hide broken icons. Courtesy of Kevin Jantzer: https://stackoverflow.com/a/22051972
+    function hideBrokenIcons() {
+      document.addEventListener("DOMContentLoaded", function(event) {
+        document.querySelectorAll('.menuIcon').forEach(function(img) {
+          img.onerror = function(){this.style.display='none';};
+        })
+      });
+    }
+    
+    // Hides display text with id == <info>_<lang>.
+    // Alternatively hides error message if that's currently displayed.
+    function hideDisplayText(info, lang) {
+      $(document).ready(function() {
+        let id = "#" + info + "_" + lang;
+        
+        // If error is displayed, hide that instead.
+        if (errorIsDisplayed)
+          id = "#infoError";
+        
+        try {
+          if (!$(id).length)
+            throw new Error("Couldn't find element with id: " + id);
+          $(id).hide();
+          errorIsDisplayed = false;   // We've hidden the error message.
+        } catch(error) {
+          handleError(error);
+        }
+      });
+    }
+    
+    // Displays display text with id == <info>_<lang>.
+    function setDisplayText(info, lang) {
+      $(document).ready(function() {
+        let id = "#" + info + "_" + lang;
+        
+        try {
+          if (!$(id).length)
+            throw new Error("Couldn't find element with id: " + id);
+          $(id).show();
+        } catch(error) {
+          handleError(error);
+        }
+      });
+    }
+    
+    // Change what text is displayed on the main display. Args:
+    //  - newVal:       next info or language.
+    //  - changeNature: indicates whether newVal is info or language.
+    function changeDisplayText(newVal, changeNature) {
+      $(document).ready(function() {
+        let elem;
+        let newInfo = currentInfo;
+        let newLang = currentLang;
+        
+        // Set new value based on nature of change.
+        if (changeNature == "lang")
+          newLang = newVal
+        else if (changeNature == "info")
+          newInfo = newVal;
+        else
+          return;     // We shouldn't get here, but if we do, do nothing.
+        
+        let currentId = "#" + currentInfo + "_" + currentLang;
+        let nextId = "#" + newInfo + "_" + newLang;
+        
+        // If error is displayed, current id is infoError instead.
+        if (errorIsDisplayed)
+          currentId = "#infoError";
+        
+        // Don't do anything if the new text is the same as current.
+        if (currentId == nextId)
+          return;
+        
+        try {
+        
+          // Handle element not found errors.
+          if (!$(currentId).length)
+            throw new Error("Couldn't find element with id: " + currentId);
+          if (!$(nextId).length)
+            throw new Error("Couldn't find element with id: " + nextId);
+          
+          // Fade out previous text, then fade in new text.
+          $(currentId).fadeTo(250, 0, function () {
+            $(currentId).hide();
+            $(nextId).css("opacity", "0");
+            $(nextId).show()
+            $(nextId).fadeTo(250, 1);
+          });
+
+          errorIsDisplayed = false;
+        } catch(error) {
+          handleError(error);
+        }
+        
+        // Update current language & text values.
+        currentInfo = newInfo;
+        currentLang = newLang;
+      });
+    }
+    
+    // Initialize text when first loading the page.
+    function initText(info, lang) {
+      currentInfo = info;
+      currentLang = lang;
+      setDisplayText(info, lang);
+    }
+  </script>
 </head>
 <body>
+  <div class="sideMenus">
+    <div class="menu leftMenu">
+      <div class="subMenu">
+        <h3>Opleidingen</h3>
+        <div class="menuItem">
+          <a target="_blank" href="https://theses.liacs.nl/1539">
+            <img src="img/ulIcon256x256.png" class="menuIcon">WO Bachelor
+          </a>
+        </div>
+        <div class="menuItem">
+          <a target="_blank" href="https://theses.liacs.nl/3071">
+            <img src="img/ulIcon256x256.png" class="menuIcon">WO Master
+          </a>
+        </div>
+        <div class="menuItem">
+          <a target="_blank" href="https://learn.microsoft.com/api/credentials/share/en-us/BenjaminSteffens/79CE60C677AC62E8?sharingId=66084197774656C1">
+            <img src="img/mscertfundbadgeIcon256x256.png" class="menuIcon">AZ-900
+          </a>
+        </div>
+      </div>
+        
+      <div class="subMenu">
+        <h3>Vaardigheden</h3>
+        <div class="menuItem">
+          <img src="img/pythonIcon256x256.png" class="menuIcon">
+          <p>Python</p>
+        </div>
+        <div class="menuItem">
+          <img src="img/cIcon256x256.png" class="menuIcon">
+          <p>C</p>
+        </div>
+        <div class="menuItem">
+          <img src="img/cppIcon256x256.png" class="menuIcon">
+          <p>C++</p>
+        </div>
+        <div class="menuItem">
+          <img src="img/armIcon256x256.png" class="menuIcon">
+          <p>ARM assembly</p>
+        </div>
+        <div class="menuItem">
+          <img src="img/sqlIcon256x256.png" class="menuIcon">
+          <p>SQL</p>
+        </div>
+        <div class="menuItem">
+          <img src="img/javaIcon256x256.png" class="menuIcon">
+          <p>Java</p>
+        </div>
+      </div>
+      
+      <div class="subMenu">
+        <h3>Talen</h3>
+        <div class="menuItem">
+          <button class="button" onclick="changeDisplayText('LANGNL', 'lang')">
+            <img src="img/flagnlIcon52x52.png" class="menuIcon">Nederlands
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button" onclick="changeDisplayText('LANGEN', 'lang')">
+            <img src="img/flagenIcon52x52.png" class="menuIcon">English
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button" onclick="changeDisplayText('LANGDE', 'lang')">
+            <img src="img/flagdeIcon52x52.png" class="menuIcon">Deutsch
+          </button>
+        </div>
+      </div>
+    </div>
+      
+    <div class="menu rightMenu">
+      <div class="subMenu">
+        <h3>Ik</h3>
+        <div class="menuItem">
+          <button class="button" onclick="changeDisplayText('infoAboutMe', 'info')">
+            <img src="img/personIcon64x64.png" class="menuIcon">Over mij
+          </button>
+        </div>
+      </div>
+    
+      <div class="subMenu">
+        <h3>Links</h3>
+        <div class="menuItem">
+          <a target="_blank" href="https://github.com/Huichelaar">
+            <img src="img/githubIcon230x230.png" class="menuIcon">GitHub
+          </a>
+        </div>
+        <div class="menuItem">
+          <a target="_blank" href="https://www.linkedin.com/in/benjamin-steffens-155800298/">
+            <img src="img/linkedinIcon256x256.png" class="menuIcon">LinkedIn
+          </a>
+        </div>
+      </div>
+      
+      <div class="subMenu">
+        <h3>Hobbies</h3>
+        <div class="menuItem">
+          <button class="button">
+            <img src="img/spelIcon24x24.png" class="menuIcon">Spellen
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button">
+            <img src="img/brickIcon35x35.png" class="menuIcon">Modelbouw
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button">
+            <img src="img/cardIcon36x36.png" class="menuIcon">Verzamelen
+          </button>
+        </div>
+      </div>
+    
+      <div class="subMenu">
+        <h3>Projecten</h3>
+        <div class="menuItem">
+          <button class="button" onclick="changeDisplayText('infoPilaren', 'info')">
+            <img src="img/pilarenIcon32x32.png" class="menuIcon">Pilaren
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button">
+            <img src="img/binderIcon64x64.png" class="menuIcon">DigitalBinder
+          </button>
+        </div>
+        <div class="menuItem">
+          <button class="button">
+            <img src="img/invaderIcon16x16.png" class="menuIcon">SpaceInvaders
+          </button>
+        </div>
+      </div>
+    </div>
+  
+  <div class="mainDisplay">
+    <div id="infoError" style="display:none">
+      <p>NL</p>
+      <p>An error occurred.</p>
+      <p>DE</p>
+      </p>
+    </div>
+    <div id="infoAboutMe_LANGNL">
+      <h1 class="title">Name</h1>
+      <p>infoAboutMe NL text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+    </div>
+    <div id="infoAboutMe_LANGEN" style="display:none">
+      <h1 class="title">Name</h1>
+      <p>infoAboutMe EN text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+    </div>
+    <div id="infoAboutMe_LANGDE" style="display:none">
+      <h1 class="title">Name</h1>
+      <p>infoAboutMe DE text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+    </div>
+    <div id="infoPilaren_LANGNL" style="display:none">
+      <h1 class="title">Pilaren</h1>
+      <p>infoPilaren NL text: Lorem</p>
+    </div>
+    <div id="infoPilaren_LANGEN" style="display:none">
+      <h1 class="title">Pilaren</h1>
+      <p>infoPilaren EN text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+    </div>
+    <div id="infoPilaren_LANGDE" style="display:none">
+      <h1 class="title">Pilaren</h1>
+      <p>infoPilaren DE text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+    </div>
+    <noscript>
+      <div id="infoEnableScriptsPrompt">
+        <p>NL</p>
+        <p>Please enable JavaScript to display this page correctly.</p>
+        <p>DE</p>
+      </div>
+    </noscript>
+  </div>
 
-<h1>This is the main page</h1>
-<p>This is a paragraph.</p>
-
-<p><a href="page2/index.html">Link to page 2</a></p>
-
+  <script>
+    // Initialize page.
+    hideBrokenIcons();
+    initText("infoAboutMe", "LANGNL");    // Init page on infoAboutMe in language: NL.
+  </script>
 </body>
 </html>
