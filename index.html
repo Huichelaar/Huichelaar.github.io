@@ -6,8 +6,32 @@
   <script src="js/jquery-3.7.1.min.js"></script>
   <script>
     // I'd rather use an enum, but I don't see how to avoid using strings here.
-    let currentLang = "LANG_NULL";
-    let currentInfo = "INFO_NULL"
+    let currentLang = "LANGNULL";
+    let currentInfo = "INFONULL"
+    let errorIsDisplayed = false;
+  
+    // Display error and set errorIsDisplayed bool to true
+    // to indicate an error is currently being displayed.
+    function handleError(errorMsg) {
+    
+      // Output error message to console.
+      console.log(errorMsg)
+      
+      // Output error message to display screen.
+      try {
+        if (!$("#infoError").length) {
+          throw new Error("Couldn't find error message element with id: infoError");
+        }
+        $("#infoError").text(errorMsg).show();
+        errorIsDisplayed = true;
+      } catch(error) {
+        // If we can't send message to display screen, log that too.
+        console.log(error)
+        
+        // Instead alert it to visitor.
+        alert(errorMsg);
+      }
+    }
   
     // Hide broken icons. Courtesy of Kevin Jantzer: https://stackoverflow.com/a/22051972
     function hideBrokenIcons() {
@@ -18,28 +42,95 @@
       });
     }
     
-    // Hides display text with id == "info_lang".
+    // Hides display text with id == <info>_<lang>.
+    // Alternatively hides error message if that's currently displayed.
     function hideDisplayText(info, lang) {
-      var elem = document.getElementById(info + "_" + lang);
-      
-      try {
-        elem.style.display = "none";
-      } catch(error) {
-        console.error(error);
-        document.getElementById('errorInfo').style.display = "block";
-      }
+      $(document).ready(function() {
+        let id = "#" + info + "_" + lang;
+        
+        // If error is displayed, hide that instead.
+        if (errorIsDisplayed)
+          id = "#infoError";
+        
+        try {
+          if (!$(id).length)
+            throw new Error("Couldn't find element with id: " + id);
+          $(id).hide();
+          errorIsDisplayed = false;   // We've hidden the error message.
+        } catch(error) {
+          handleError(error);
+        }
+      });
     }
     
-    // displays display text with id == "info_lang".
+    // Displays display text with id == <info>_<lang>.
     function setDisplayText(info, lang) {
-      var elem = document.getElementById(info + "_" + lang);
-      
-      try {
-        elem.style.display = "block";
-      } catch(error) {
-        console.error(error);
-        document.getElementById('errorInfo').style.display = "block";
-      }
+      $(document).ready(function() {
+        let id = "#" + info + "_" + lang;
+        
+        try {
+          if (!$(id).length)
+            throw new Error("Couldn't find element with id: " + id);
+          $(id).show();
+        } catch(error) {
+          handleError(error);
+        }
+      });
+    }
+    
+    // Change what text is displayed on the main display. Args:
+    //  - newVal:       next info or language.
+    //  - changeNature: indicates whether newVal is info or language.
+    function changeDisplayText(newVal, changeNature) {
+      $(document).ready(function() {
+        let elem;
+        let newInfo = currentInfo;
+        let newLang = currentLang;
+        
+        // Set new value based on nature of change.
+        if (changeNature == "lang")
+          newLang = newVal
+        else if (changeNature == "info")
+          newInfo = newVal;
+        else
+          return;     // We shouldn't get here, but if we do, do nothing.
+        
+        let currentId = "#" + currentInfo + "_" + currentLang;
+        let nextId = "#" + newInfo + "_" + newLang;
+        
+        // If error is displayed, current id is infoError instead.
+        if (errorIsDisplayed)
+          currentId = "#infoError";
+        
+        // Don't do anything if the new text is the same as current.
+        if (currentId == nextId)
+          return;
+        
+        try {
+        
+          // Handle element not found errors.
+          if (!$(currentId).length)
+            throw new Error("Couldn't find element with id: " + currentId);
+          if (!$(nextId).length)
+            throw new Error("Couldn't find element with id: " + nextId);
+          
+          // Fade out previous text, then fade in new text.
+          $(currentId).fadeTo(250, 0, function () {
+            $(currentId).hide();
+            $(nextId).css("opacity", "0");
+            $(nextId).show()
+            $(nextId).fadeTo(250, 1);
+          });
+
+          errorIsDisplayed = false;
+        } catch(error) {
+          handleError(error);
+        }
+        
+        // Update current language & text values.
+        currentInfo = newInfo;
+        currentLang = newLang;
+      });
     }
     
     // Initialize text when first loading the page.
@@ -47,30 +138,6 @@
       currentInfo = info;
       currentLang = lang;
       setDisplayText(info, lang);
-    }
-    
-    // Change what text is displayed on the main display. Args:
-    //  - newVal:       next info or language.
-    //  - changeNature: indicates whether newVal is info or language.
-    function changeDisplayText(newVal, changeNature) {
-      var elem;
-      var newInfo = currentInfo;
-      var newLang = currentLang;
-      
-      // Set new value based on nature of change.
-      if (changeNature == "lang")
-        newLang = newVal
-      else if (changeNature == "info")
-        newInfo = newVal;
-      else
-        return;     // We shouldn't get here, but if we do, do nothing.
-      
-      hideDisplayText(currentInfo, currentLang);    // Hide previous text.
-      setDisplayText(newInfo, newLang);             // Display new text.
-      
-      // Update current language & text values.
-      currentInfo = newInfo;
-      currentLang = newLang;
     }
   </script>
 </head>
@@ -134,12 +201,12 @@
         </div>
         <div class="menuItem">
           <button class="button" onclick="changeDisplayText('LANGEN', 'lang')">
-            <img src="img/flagenIcon52x52.png" class="menuIcon">Engels
+            <img src="img/flagenIcon52x52.png" class="menuIcon">English
           </button>
         </div>
         <div class="menuItem">
           <button class="button" onclick="changeDisplayText('LANGDE', 'lang')">
-            <img src="img/flagdeIcon52x52.png" class="menuIcon">Duits
+            <img src="img/flagdeIcon52x52.png" class="menuIcon">Deutsch
           </button>
         </div>
       </div>
@@ -200,13 +267,13 @@
     </div>
   
   <div class="mainDisplay">
-    <div id="errorInfo" style="display:none">
+    <div id="infoError" style="display:none">
       <p>NL</p>
       <p>An error occurred.</p>
       <p>DE</p>
       </p>
     </div>
-    <div id="infoAboutMe_LANGNL" style="display:none">
+    <div id="infoAboutMe_LANGNL">
       <h1 class="title">Name</h1>
       <p>infoAboutMe NL text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
     </div>
@@ -220,7 +287,7 @@
     </div>
     <div id="infoPilaren_LANGNL" style="display:none">
       <h1 class="title">Pilaren</h1>
-      <p>infoPilaren NL text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+      <p>infoPilaren NL text: Lorem</p>
     </div>
     <div id="infoPilaren_LANGEN" style="display:none">
       <h1 class="title">Pilaren</h1>
