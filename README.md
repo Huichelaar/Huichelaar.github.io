@@ -10,5 +10,5 @@ Webpage
 - Write NL & DE error messages when display fails.
 - Write NL & DE warnings to visitor to enable javascript.
 - Disable clicking green links when text is fading in/out.
-- Disable pressing the ingame buttons after power is turned off. Re-enable after power is turned on.
-- Scale & place game-crash image correctly.
+- ~~Disable pressing the ingame buttons after power is turned off. Re-enable after power is turned on.~~
+- ~~Scale & place game-crash image correctly.~~
