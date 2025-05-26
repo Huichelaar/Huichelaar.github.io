@@ -7,9 +7,28 @@
   <script src="js/jquery-3.7.1.min.js"></script>
   <script>
     // I'd rather use an enum, but I don't see how to avoid using strings here.
+    const languageDict = {
+      "LANGNULL":0,
+      "LANGNL":1,
+      "LANGEN":2,
+      "LANGDE":3
+    }
+    
     let currentLang = "LANGNULL";
     let currentInfo = "INFONULL"
     let errorIsDisplayed = false;
+    const menuText = [  // Determines what text to display for the submenus based on language setting.
+      ["#education", "Opleidingen", "Education", "Ausbildung"],
+      ["#skills", "Vaardigheden", "Skills", "Fertigkeiten"],
+      ["#languages", "Talen", "Languages", "Sprachen"],
+      ["#me", "Ik", "Me", "Ich"],
+      ["#aboutMe", "Over mij", "About me", "TODO"],
+      ["#hobbies", "Hobbies", "Hobbies", "TODO"],
+      ["#games", "Spellen", "Games", "TODO"],
+      ["#modelBuilding", "Modelbouw", "Modelbuilding", "TODO"],
+      ["#collecting", "Verzamelen", "Collecting", "TODO"],
+      ["#projects", "Projecten", "Projects", "TODO"]
+    ];
   
     // Display error and set errorIsDisplayed bool to true
     // to indicate an error is currently being displayed.
@@ -120,6 +139,12 @@
             $(currentId).hide();
             $(nextId).css("opacity", "0");
             $(nextId).show()
+            
+            // Set menu elements' text to match new language value.
+            for (i = 0; i < menuText.length; i++) {
+              $(menuText[i][0]).text(menuText[i][languageDict[newVal]]);
+            }
+            
             $(nextId).fadeTo(250, 1);
           });
 
@@ -146,15 +171,15 @@
   <div class="sideMenus">
     <div class="menu leftMenu">
       <div class="subMenu">
-        <h3>Opleidingen</h3>
+        <h3 id="education">Opleidingen</h3>
         <div class="menuItem">
           <a target="_blank" href="https://theses.liacs.nl/1539">
-            <img src="img/ulIcon256x256.png" class="menuIcon">WO Bachelor
+            <img src="img/ulIcon256x256.png" class="menuIcon">Bachelor Info
           </a>
         </div>
         <div class="menuItem">
           <a target="_blank" href="https://theses.liacs.nl/3071">
-            <img src="img/ulIcon256x256.png" class="menuIcon">WO Master
+            <img src="img/ulIcon256x256.png" class="menuIcon">Master CS
           </a>
         </div>
         <div class="menuItem">
@@ -165,7 +190,7 @@
       </div>
         
       <div class="subMenu">
-        <h3>Vaardigheden</h3>
+        <h3 id="skills">Vaardigheden</h3>
         <div class="menuItem">
           <img src="img/pythonIcon256x256.png" class="menuIcon">
           <p>Python</p>
@@ -193,7 +218,7 @@
       </div>
       
       <div class="subMenu">
-        <h3>Talen</h3>
+        <h3 id="languages">Talen</h3>
         <div class="menuItem">
           <button class="button" onclick="changeDisplayText('LANGNL', 'lang')">
             <img src="img/flagnlIcon52x52.png" class="menuIcon">Nederlands
@@ -214,10 +239,11 @@
       
     <div class="menu rightMenu">
       <div class="subMenu">
-        <h3>Ik</h3>
+        <h3 id="me">Ik</h3>
         <div class="menuItem">
           <button class="button" onclick="changeDisplayText('infoAboutMe', 'info')">
-            <img src="img/personIcon64x64.png" class="menuIcon">Over mij
+            <img src="img/personIcon64x64.png" class="menuIcon">
+            <nobr id="aboutMe">Over mij</nobr>
           </button>
         </div>
       </div>
@@ -237,38 +263,41 @@
       </div>
       
       <div class="subMenu">
-        <h3>Hobbies</h3>
+        <h3 id="hobbies">Hobbies</h3>
         <div class="menuItem">
-          <button class="button">
-            <img src="img/spelIcon24x24.png" class="menuIcon">Spellen
+          <button class="button" onclick="changeDisplayText('infoGames', 'info')">
+            <img src="img/spelIcon24x24.png" class="menuIcon">
+            <nobr id="games">Spellen</nobr>
           </button>
         </div>
         <div class="menuItem">
-          <button class="button">
-            <img src="img/brickIcon35x35.png" class="menuIcon">Modelbouw
+          <button class="button" onclick="changeDisplayText('infoModelBuilding', 'info')">
+            <img src="img/brickIcon35x35.png" class="menuIcon">
+            <nobr id="modelBuilding">Modelbouw</nobr>
           </button>
         </div>
         <div class="menuItem">
-          <button class="button">
-            <img src="img/cardIcon36x36.png" class="menuIcon">Verzamelen
+          <button class="button" onclick="changeDisplayText('infoCollecting', 'info')">
+            <img src="img/cardIcon36x36.png" class="menuIcon">
+            <nobr id="collecting">Verzamelen</nobr>
           </button>
         </div>
       </div>
     
       <div class="subMenu">
-        <h3>Projecten</h3>
+        <h3 id="projects">Projecten</h3>
         <div class="menuItem">
           <button class="button" onclick="changeDisplayText('infoPilaren', 'info')">
             <img src="img/pilarenIcon32x32.png" class="menuIcon">Pilaren
           </button>
         </div>
         <div class="menuItem">
-          <button class="button">
+          <button class="button" onclick="changeDisplayText('infoDigitalBinder', 'info')">
             <img src="img/binderIcon64x64.png" class="menuIcon">DigitalBinder
           </button>
         </div>
         <div class="menuItem">
-          <button class="button">
+          <button class="button" onclick="changeDisplayText('infoSpaceInvaders', 'info')">
             <img src="img/invaderIcon16x16.png" class="menuIcon">SpaceInvaders
           </button>
         </div>
@@ -294,6 +323,42 @@
       <h1 class="title">Name</h1>
       <p>infoAboutMe DE text: Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
     </div>
+    <div id="infoGames_LANGNL" style="display:none">
+      <h1 class="title">Spellen</h1>
+      <p>info NL text: Lorem.</p>
+    </div>
+    <div id="infoGames_LANGEN" style="display:none">
+      <h1 class="title">Games</h1>
+      <p>info EN text: Lorem.</p>
+    </div>
+    <div id="infoGames_LANGDE" style="display:none">
+      <h1 class="title">TODO</h1>
+      <p>info DE text: Lorem.</p>
+    </div>
+    <div id="infoModelBuilding_LANGNL" style="display:none">
+      <h1 class="title">Modelbouw</h1>
+      <p>info NL text: Lorem.</p>
+    </div>
+    <div id="infoModelBuilding_LANGEN" style="display:none">
+      <h1 class="title">Modelbuilding</h1>
+      <p>info EN text: Lorem.</p>
+    </div>
+    <div id="infoModelBuilding_LANGDE" style="display:none">
+      <h1 class="title">TODO</h1>
+      <p>info DE text: Lorem.</p>
+    </div>
+    <div id="infoCollecting_LANGNL" style="display:none">
+      <h1 class="title">Verzamelen</h1>
+      <p>info NL text: Lorem.</p>
+    </div>
+    <div id="infoCollecting_LANGEN" style="display:none">
+      <h1 class="title">Collecting</h1>
+      <p>info EN text: Lorem.</p>
+    </div>
+    <div id="infoCollecting_LANGDE" style="display:none">
+      <h1 class="title">TODO</h1>
+      <p>info DE text: Lorem.</p>
+    </div>
     <div id="infoPilaren_LANGNL" style="display:none" style="height:200px;width:300px;">
       <h1 class="title">Pilaren</h1>
       <p>infoPilaren NL text: Lorem</p>
@@ -309,6 +374,31 @@
       <p>infoPilaren DE text: Lorem</p>
       <iframe src="gbajs2/indexDE.html" style="height:640px;width:610px;border:outset;"></iframe>
     </div>
+    <div id="infoDigitalBinder_LANGNL" style="display:none">
+      <h1 class="title">Digital Binder</h1>
+      <p>info NL text: Lorem.</p>
+    </div>
+    <div id="infoDigitalBinder_LANGEN" style="display:none">
+      <h1 class="title">Digital Binder</h1>
+      <p>info EN text: Lorem.</p>
+    </div>
+    <div id="infoDigitalBinder_LANGDE" style="display:none">
+      <h1 class="title">Digital Binder</h1>
+      <p>info DE text: Lorem.</p>
+    </div>
+    <div id="infoSpaceInvaders_LANGNL" style="display:none">
+      <h1 class="title">Space Invaders</h1>
+      <p>info NL text: Lorem.</p>
+    </div>
+    <div id="infoSpaceInvaders_LANGEN" style="display:none">
+      <h1 class="title">Space Invaders</h1>
+      <p>info EN text: Lorem.</p>
+    </div>
+    <div id="infoSpaceInvaders_LANGDE" style="display:none">
+      <h1 class="title">Space Invaders</h1>
+      <p>info DE text: Lorem.</p>
+    </div>
+    
     <noscript>
       <div id="infoEnableScriptsPrompt">
         <p>NL</p>
