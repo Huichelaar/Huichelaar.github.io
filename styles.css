@@ -2,14 +2,25 @@ body {
   background-color: rgb(27, 32, 32);
   font-family: "Trebuchet MS", sans-serif;
   color: white;
+  
+  min-width: 1064px;
 }
 
-.temp {
-  background-color: rgb(65, 70, 70);
-  font-family: "Trebuchet MS", sans-serif;
-  color: white;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+.infoSubCat {
+  width: 100%;
+  height: auto;
+  display: table;
+}
+
+.infoSubText {
+  max-width: 48%;
+  float: left;
+}
+
+.infoImg {
+  float: right;
+  width: 256px;
+  height: auto;
 }
 
 p, h1, h2, h3, a {
@@ -74,13 +85,16 @@ a:active {
 
 .mainDisplay {
   font-size: 1em;
-  max-width: 1000px;
-  min-width: auto;
+  max-width: 750px;
+  min-width: 500px;
   
   border-style: hidden;
   border-radius: 5px;
   
   padding: .75em .75em .75em .75em;
+  
+  overflow-x: auto;
+  overflow-y: hidden;
   
   background: rgb(65, 70, 70);
   
